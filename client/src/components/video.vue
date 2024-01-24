@@ -646,6 +646,11 @@
       const { w, h } = this.$accessor.video.resolution
       const rect = this._overlay.getBoundingClientRect()
 
+      var x = Math.round((w / rect.width) * (e.clientX - rect.left))
+      var y = Math.round((h / rect.height) * (e.clientY - rect.top))
+
+      //console.log("Mousemove pos: ", x, y)
+
       this.$client.sendData('mousemove', {
         x: Math.round((w / rect.width) * (e.clientX - rect.left)),
         y: Math.round((h / rect.height) * (e.clientY - rect.top)),
@@ -657,28 +662,33 @@
       if (!this.hosting || this.locked) {
         return
       }
-
+      
       let x = e.deltaX
       let y = e.deltaY
-
+      console.log("deltaX: ", x)
+      console.log("deltaY: ", y)
       // Pixel units unless it's non-zero.
       // Note that if deltamode is line or page won't matter since we aren't
       // sending the mouse wheel delta to the server anyway.
       // The difference between pixel and line can be important however since
       // we have a threshold that can be smaller than the line height.
       if (e.deltaMode !== 0) {
+        console.log('delta mode not equal to 0')
         x *= WHEEL_LINE_HEIGHT
         y *= WHEEL_LINE_HEIGHT
       }
 
       if (this.scroll_invert) {
+        console.log("Inverted")
         x = x * -1
         y = y * -1
       }
+      console.log("After scroll_inv X: %s, Y: %s", x, y)
 
       x = Math.min(Math.max(x, -this.scroll), this.scroll)
       y = Math.min(Math.max(y, -this.scroll), this.scroll)
 
+      console.log("X: %s, Y: %s", x, y)
       this.sendMousePos(e)
 
       if (!this.wheelThrottle) {

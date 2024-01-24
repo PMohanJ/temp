@@ -33,3 +33,6 @@ bin
 
 # Environment files
 *.env
+
+# Neko fe
+neko-fe
