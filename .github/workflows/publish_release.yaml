@@ -1,0 +1,32 @@
+name: Build and publish images on every new release
+
+on:
+  release:
+    type: [created]
+
+jobs:
+  build_and_push:
+    name: Build and push the docker images to container registry
+    runs_on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3 
+
+    - name: Login to docker 
+      env: 
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+      run: docker login -u $DOCKER_USER -p $DOCKER_ACCESS_TOKEN
+
+    - name: Get the release tag
+      run: echo "TAG=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+    
+    - name: Build the image
+      run: docker build . --tag mohanj7/${{ gihub.repository }}:${{ TAG }}
+    
+    - name: Push the image
+      run: |
+        docker tag mohanj7/${{ gihub.repository }}:${{ TAG }}mohanj7/${{ gihub.repository }}:latest
+        docker push mohanj7/${{ gihub.repository }}:${{ TAG }}
+        docker push mohanj7/${{ gihub.repository }}:latest
+
