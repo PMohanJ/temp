@@ -19,10 +19,12 @@ jobs:
       run: docker login -u $DOCKER_USER -p $DOCKER_ACCESS_TOKEN
 
     - name: Get the release tag
-      run: echo "TAG=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+      run: | 
+        echo "TAG=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+        echo "REPO_NAME=$(echo ${{ github.repository }} | cut -d "/" -f 2)" >> $GITHUB_ENV
     
     - name: Build the image
-      run: docker build . --tag mohanj7/${{ github.repository }}:${{ env.TAG }}
+      run: docker build . --tag mohanj7/${{ env.REPO_NAME }}:${{ env.TAG }}
     
     - name: Push the image
       run: |
