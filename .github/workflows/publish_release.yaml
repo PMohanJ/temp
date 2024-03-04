@@ -22,11 +22,11 @@ jobs:
       run: echo "TAG=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
     
     - name: Build the image
-      run: docker build . --tag mohanj7/${{ gihub.repository }}:${{ TAG }}
+      run: docker build . --tag mohanj7/${{ github.repository }}:${{ TAG }}
     
     - name: Push the image
       run: |
-        docker tag mohanj7/${{ gihub.repository }}:${{ TAG }}mohanj7/${{ gihub.repository }}:latest
-        docker push mohanj7/${{ gihub.repository }}:${{ TAG }}
-        docker push mohanj7/${{ gihub.repository }}:latest
+        docker tag mohanj7/${{ github.repository }}:${{ TAG }} mohanj7/${{ github.repository }}:latest
+        docker push mohanj7/${{ github.repository }}:${{ TAG }}
+        docker push mohanj7/${{ github.repository }}:latest
 
