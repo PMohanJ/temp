@@ -24,7 +24,7 @@ jobs:
   build-and-push:
     name: build and  push 
     runs-on: ubuntu-latest
-    if: needs.check.output.desktop-img-chnaged == 'true'
+    if: needs.check.outputs.desktop-img-chnaged == 'true'
     steps:
     - uses: actions/checkout@v3
       with:
