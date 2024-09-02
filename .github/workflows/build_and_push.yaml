@@ -20,7 +20,7 @@ jobs:
       run: |
         desktop_img_changed=$(git diff --name-only HEAD~1 | grep '^docker/desktop' || true)
         echo "desktop-img-changed=$([ -n "$desktop_img_changed" ] && echo 'true' || echo 'false')" >> $GITHUB_ENV
-        echo $desktop-img-changed
+        echo $desktop_img_changed
 
   build-and-push:
     name: build and push 
