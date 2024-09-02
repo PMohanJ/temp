@@ -10,7 +10,7 @@ jobs:
     name: check
     runs-on: ubuntu-latest
     outputs:
-      desktop-img-changed: ${{ steps.check.outputs.desktop-img-changed }}
+      desktop: ${{ steps.check.outputs.desktop }}
     steps:
     - uses: actions/checkout@v3
       with:
@@ -19,15 +19,15 @@ jobs:
       id: check
       run: |
         desktop_img_changed=$(git diff --name-only HEAD~1 | grep '^docker/desktop' || true)
-        echo "desktop-img-changed=$([ -n "$desktop_img_changed" ] && echo 'true' || echo 'false')" >> $GITHUB_ENV
+        echo "desktop=$([ -n "$desktop_img_changed" ] && echo 'true' || echo 'false')" >> $GITHUB_ENV
         echo $desktop_img_changed
-        echo $desktop-img-changed
+        echo $desktop
 
   build-and-push:
     name: build and push 
     runs-on: ubuntu-latest
     needs: check
-    if: needs.check.outputs.desktop-img-changed == 'true'
+    if: needs.check.outputs.desktop == 'true'
     steps:
     - uses: actions/checkout@v3
       with:
