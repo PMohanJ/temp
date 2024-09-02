@@ -1,0 +1,42 @@
+name: Build and Push Docker Images on Push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    outputs:
+      desktop-img-changed: ${{ steps.check.outputs.desktop-img-changed }}
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: check files changes at the path
+      id: check
+      run: |
+        desktop_img_changed=$(git diff --name-only HEAD~1 | grep '^docker/desktop' || true)
+        echo "desktop-img-changed=$([ -n $desktop_img_changed ] && echo 'true' || echo 'false')" >> $GITHUB_ENV
+
+  build-and-push:
+    name: build and  push 
+    runs-on: ubuntu-latest
+    if: needs.check.output.desktop-img-chnaged == 'true'
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Login to Docker Hub
+      env:
+        DOCKER_USER: ${{ secrets.DOCKERHUB_USER }}
+        DOCKER_PWD: ${{ secrets.DOCKERHUB_PUSH_TOKEN }}
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PWD
+
+    - name: Build and push desktop
+      run: |
+        cd docker-images/base/desktop
+        docker build . --tag coredgeio/dstreamer-desktop:main
+        docker push coredgeio/dstreamer-desktop:main\
+    
