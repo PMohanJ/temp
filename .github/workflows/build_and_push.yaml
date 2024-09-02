@@ -13,7 +13,8 @@ jobs:
       desktop-img-changed: ${{ steps.check.outputs.desktop-img-changed }}
     steps:
     - uses: actions/checkout@v3
-    
+      with:
+        fetch-depth: 2
     - name: check files changes at the path
       id: check
       run: |
@@ -26,6 +27,8 @@ jobs:
     if: needs.check.output.desktop-img-chnaged == 'true'
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 2
 
     # - name: Login to Docker Hub
     #   env:
