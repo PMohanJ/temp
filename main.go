@@ -2,8 +2,17 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 func main() {
-	fmt.Println("Hello World!!!")
+	ticker := time.NewTicker(2 * time.Second)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ticker.C :
+			fmt.Println("Hello World!!!")
+		}
+	}
 }
